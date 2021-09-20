@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Hamburglar, Or.. How to get rid of CSS (mostly)
-categories: [wagtail]
+categories: [wagtail, css, grid]
 ---
 
 <h1 align="center">{{ page.title }}</h1>
