@@ -302,7 +302,9 @@ Now you'll need to add loops to the wagtail page rendering template's head secti
         pages
           web_page.html
                     
-    {% raw %}{% load static myapp_tags i18n wagtailcore_tags wagtailimages_tags wagtailsettings_tags wagtailuserbar %}
+    {% raw %}{% load static myapp_tags i18n 
+        wagtailcore_tags wagtailimages_tags 
+        wagtailsettings_tags wagtailuserbar %}
     {% wagtail_site as current_site %}
     {% get_settings %}
     {% get_current_language as LANGUAGE_CODE %}
@@ -345,7 +347,9 @@ Now you'll need to add loops to the wagtail page rendering template's head secti
     {% with grid.grid_justify as gridjustify %}
     #{{ gridid }} .parent-grid { 
     display: grid;
-    grid-template-columns: repeat({% if grid.grid_autofit == 'auto-fit' %}auto-fit{% elif grid.grid_autofit == 'auto-fill' %}auto-fill{% endif %}, minmax({{ grid.grid_minimum }}px, 1fr));
+    grid-template-columns: repeat({% if grid.grid_autofit == 'auto-fit' %}
+        auto-fit{% elif grid.grid_autofit == 'auto-fill' %}
+        auto-fill{% endif %}, minmax({{ grid.grid_minimum }}px, 1fr));
     }
     {% if request.is_preview %}
     #{{ gridid }} .parent-grid [class|="div"] { 
