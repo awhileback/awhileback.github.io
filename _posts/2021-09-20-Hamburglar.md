@@ -4,7 +4,7 @@ title: Hamburglar, Or.. How to get rid of CSS (mostly)
 categories: [wagtail]
 ---
 
-<h1 align="center">{{ page.title }}</h1>
+<h1 align="center"><a href="#">{{ page.title }}</a></h1>
 <br/>
 <h3 align="center"> <i>&bull; {{ page.date | date: "%b %-d, %Y" }}</i></h3>
 <br/>
@@ -444,6 +444,10 @@ Then, if you add a simple **HtmlBlock** to the StreamField body for your page, a
 ```
 
 Hit the page preview, and you should be greeted with your "test" divs laid out in the grid that you drew in the gui, with nice pink dotted lines around them showing their placement on the page.  If you go back and repeat the process but create a "grid row" instead of a "grid layout" you will have a responsive grid row that line breaks as the screen size shrinks, at the points you specified in the form.
+
+{:refdef: style="text-align: center;"}
+![grids](/assets/images/001_1.jpg)
+{: refdef}
 
 At this point hopefully you can see the potential here, so all you have left to do to delete all of the layout related css files from your site is to add a block that contains a grid div id field, a grid div class field that gives the editor/user a list of choices of numbered divs to pick from (div-1, div-2, div-3 and so on up to an arbitrary number you think is plenty), adding that block to your other blocks and making them [StructBlocks](https://docs.wagtail.io/en/latest/advanced_topics/customisation/streamfield_blocks.html){:target="_blank" rel="noopener"}, and... of course... the long, arduous task of editing all of your block templates to include the divs with the proper variable names.  Or perhaps you want to implement the ability to let them make grid layouts as [Snippets](https://docs.wagtail.io/en/latest/topics/snippets.html){:target="_blank" rel="noopener"}, which is arguably a better place for all of this functionality to live I suppose.
 
