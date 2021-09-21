@@ -15,6 +15,7 @@ As web development passes its 30th anniversary, we can list some things that are
 1. Browsers render HTML elements, and its syntax is basically the same as it always has been.
 2. Stylesheets control what the user sees in terms of layout, and they're still stored in plain old text files.
 3. Databases provide dynamic content from the server side, while most of the advancement in terms of user-supplied content manipulation has become concentrated in javascript and its many frameworks.
+4. If you need to put things in a mobile screen and are lazy, just stuff it all into a hamburger menu.
 
 Imagine for a moment you're explaining all of this to someone who has no idea how any of it works, let's say with a slideshow that includes pictures of servers, code blurbs, and all of that sort of thing.  If one of those three sections could leave them scratching their heads at the end of your lecture, wondering why this is done a certain way, I think it would likely be number two.
 
