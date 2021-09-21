@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Hamburglar, Or.. How to get rid of CSS (mostly)
+title: Hamburglar, Or.. How to get rid of layout CSS (mostly)
 categories: [wagtail, css, grid]
 ---
 
