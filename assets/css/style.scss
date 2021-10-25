@@ -120,3 +120,16 @@ section #title .credits {
   color: #696969; 
   margin-top: -10px; 
 }
+
+.svgcontainer {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.svgcontainer .svg {
+  background-color: #373737;
+  display: inline-block;
+  margin: 0 auto;
+  padding: 1rem;
+}
