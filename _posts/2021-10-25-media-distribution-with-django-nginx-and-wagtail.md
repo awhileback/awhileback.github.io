@@ -391,5 +391,5 @@ Most interestingly, Cloudflare has announced a competing S3 object storage servi
 
 In any case, with the tools and the know-how there's no reason to pay the egregious percentage-of-your-gross fees that platforms like Patreon and Substack charge, go forth and serve your own content!
 
-
+Thanks to [Ewen @ Mediasuite](https://www.mediasuite.co.nz/blog/proxying-s3-downloads-nginx/){:target="_blank" rel="noopener"} and [Oleksiy Kovyrin @ Scribd](https://kovyrin.net/2010/07/24/nginx-fu-x-accel-redirect-remote/){:target="_blank" rel="noopener"} for their previous posts on this topic.  Despite being over a decade apart the how-to for all three guides remains basically unchanged.  If only front end frameworks were as stable as back end servers...
 
