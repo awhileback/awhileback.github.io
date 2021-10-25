@@ -330,6 +330,7 @@ def a_view(request):
 In my case, I use Wagtail's [routable page] methods to create an RSS feed under the index page of my individual articles / episodes / etc.  [Wagtail-personalisation](https://github.com/wagtail/wagtail-personalisation){:target="_blank" rel="noopener"} is a nifty library that can be custom-purposed to serve premium content to premium subscribers transparently, I use it for separating average-Joe users from paying users.
 
 ```python
+from myapp.podcast_feeds import PodcastFeed #(django RSS framework custom feed)
 from wagtail.core.models import Page
 from wagtail.core.utils import resolve_model_string
 from wagtail_personalisation.utils import exclude_variants
