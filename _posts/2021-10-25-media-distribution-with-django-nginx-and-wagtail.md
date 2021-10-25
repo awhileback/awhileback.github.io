@@ -327,6 +327,41 @@ def a_view(request):
     })
 ```
 
+In my case, I use Wagtail's [routable page] methods to create an RSS feed under the index page of my individual articles / episodes / etc.  [Wagtail-personalisation](https://github.com/wagtail/wagtail-personalisation){:target="_blank" rel="noopener"} is a nifty library that can be custom-purposed to serve premium content to premium subscribers transparently, I use it for separating average-Joe users from paying users.
+
+```python
+from wagtail.core.models import Page
+from wagtail.core.utils import resolve_model_string
+from wagtail_personalisation.utils import exclude_variants
+
+class PodcastContentIndexPage(RoutablePageMixin, Page):
+    ...
+
+    @cache_page
+    @route(r'^rss/$', name='rss')
+    def rss_feed(self, request):
+        """
+        Renders a public RSS Feed for the public podcast episodes under this page.
+        """
+
+        queryset = resolve_model_string(self.index_query_pagemodel, self._meta.app_label)
+
+        last = exclude_variants(queryset.objects.child_of(self).live()).first()
+        first = exclude_variants(queryset.objects.child_of(self).live()).last()
+        all_public = exclude_variants(queryset.objects.child_of(self).live()).order_by('-date_display')
+        all_private = None
+        rss_link = request.get_raw_uri()
+        home_link = self.get_site().root_url
+        token = None
+        uidb64 = None
+
+
+        # Construct the feed by passing ourself to it, so it can determine the feed's "link".
+        feed = PodcastFeed(request, rss_link, home_link, first, last, all_public, all_private, token, uidb64)
+        # 'feed' is a class-based view, so we need to call feed and pass it the request to get our response.
+        return feed(request)
+```
+
 With something like the above we might also build a queryset of podcast episode pages, to pass into Django's [syndication feed framework](https://docs.djangoproject.com/en/3.2/ref/contrib/syndication/){:target="_blank" rel="noopener"} to build an Apple podcasts / iTunes RSS feed, like Patreon does (only without the 15%-18% fee...). Or if you're doing articles instead of podcasts maybe you want to generate RSS feeds for premium articles, like Substack does (only without the 15%-18% fee...).  Or maybe you want to do both all under one banner, without any fees other than what the payment processor charges. And of course the users will be *your users*, not the users of some "platform" that could simply decide that [they're not going to let you speak (or pay your rent and bills) anymore](https://en.wikipedia.org/wiki/Patreon#Bans_of_specific_users){:target="_blank" rel="noopener"}.
 
 # Hosting Considerations
