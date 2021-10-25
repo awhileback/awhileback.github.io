@@ -10,7 +10,7 @@ categories: [wagtail, django, nginx, media, devops]
 <br/>
 <hr>
 
-Want to build a premium media distribution service with Django and Wagtail? Don't want to pay Patreon or Substack 
+Want to build a premium media distribution service with Django and Wagtail? Don't want to pay Patreon or Substack 15%-18% of your gross receipts to do it? Here's how...
 
 The assumptions and considerations this was built around:
 
