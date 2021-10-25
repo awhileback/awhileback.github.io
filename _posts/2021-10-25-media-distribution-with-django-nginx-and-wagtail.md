@@ -135,7 +135,15 @@ To visualize this, lets consider what a URL will look like:
 http://www.mydomain.net/premium_media/5AYXdoaWxlY.../2/av2r2j-8f176710bf483694.../file.mp4
 ```
 
-`5AYXdoaWxlY...` (shortened) is our user's base64 encoded email address, which will change for each user even if they request the same file.  `/2/` is the internal id of the file, which we can use to look up the file the user is requesting, and `av2r2j-8f176710bf483694...` (shortened) is the token that Django will use to authenticate the user which will also change for each user even if they request the same file. `/file.mp4` is the last part of the URL, the `$download_path` (equivalent to the file name). Since two of these URL components will be different each time the *same file* is requested, we can't use the *whole* URL as a cache key [as Nginx does by default](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_key){:target="_blank" rel="noopener"}, but we're going to use parts of it which stay the same for different user requests to the same file.
+`5AYXdoaWxlY...` (shortened) is our user's base64 encoded email address, which will change for each user even if they request the same file.  `/2/` is the internal id of the file, which we can use to look up the file the user is requesting, and `av2r2j-8f176710bf483694...` (shortened) is the token that Django will use to authenticate the user which will also change for each user even if they request the same file. `/file.mp4` is the last part of the URL, the `$download_path` (equivalent to the file name). Since two of these URL components will be different each time the *same file* is requested, we can't use the *whole* URL as a cache key [as Nginx does by default](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_key){:target="_blank" rel="noopener"}, otherwise:
+
+```
+http://www.mydomain.net/premium_media/3AYXdslkdfZ.../2/av2r2h-9gdf323dsd483692.../file.mp4
+http://www.mydomain.net/premium_media/4AYXsdaWxlY.../2/bv3r3i-8sfd8343ff483693.../file.mp4
+http://www.mydomain.net/premium_media/5ADDdoaWxlX.../2/cv4r4j-8f176710bf483694.../file.mp4
+```
+
+All of the above files would be seen as different by the default Nginx cache key, and thus defeat the whole purpose of our cache: serving the same file to different users rather than fetching it from the storage backend every time it's requested.
 
 In the `proxy_set_` and `proxy_hide_` lines we're setting the response defaults to both accommodate our cache mechanism and determine what the user will see in the response.  We've set the `host` header to the backend storage host (i.e. the url to AWS S3 or Digital Ocean or whatever storage service you use), the `authorization` and `cookie` headers to be blank, and hidden the headers returned by the backend storage host relating to the request itself, since our user doesn't need those. Finally, we've specified our cache, the `media-cache` which is created in the main Nginx config file.  
 
