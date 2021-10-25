@@ -334,6 +334,7 @@ from myapp.podcast_feeds import PodcastFeed #(django RSS framework custom feed)
 from wagtail.core.models import Page
 from wagtail.core.utils import resolve_model_string
 from wagtail_personalisation.utils import exclude_variants
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 class PodcastContentIndexPage(RoutablePageMixin, Page):
     ...
