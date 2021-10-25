@@ -366,7 +366,10 @@ class PodcastContentIndexPage(RoutablePageMixin, Page):
     @route(r'^premiumfeed/(?P<uidb64>[-\w]*)/(?P<token>[-\w]*)/$', name='premiumfeed')
     def premium_feed(self, request, uidb64, token):
         ...
-        # basically the same methods as the public RSS feed and the same base64 user id and token as the rest of this guide, but you have to build the private / paid episode queryset rather than the public one
+        # basically the same methods as the public RSS feed and the same 
+        # base64 user id and token as the rest of this guide, but you have 
+        # to build the private / paid episode queryset rather than the public 
+        # one
 ```
 
 With something like the above we can build a queryset of podcast episode pages, to pass into Django's [syndication feed framework](https://docs.djangoproject.com/en/3.2/ref/contrib/syndication/){:target="_blank" rel="noopener"} to build an Apple podcasts / iTunes RSS feed, like Patreon does (only without the 15%-18% fee...). Or if you're doing articles instead of podcasts maybe you want to generate RSS feeds for premium articles, like Substack does (only without the 15%-18% fee...).  Or maybe you want to do both all under one banner, without any fees other than what the payment processor charges. And of course the users will be *your users*, not the users of some "platform" that could simply decide that [they're not going to let you speak (or pay your rent and bills) anymore](https://en.wikipedia.org/wiki/Patreon#Bans_of_specific_users){:target="_blank" rel="noopener"}.
