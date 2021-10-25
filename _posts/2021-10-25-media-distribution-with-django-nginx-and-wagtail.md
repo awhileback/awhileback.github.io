@@ -300,7 +300,7 @@ x-cache-status: HIT
 accept-ranges: bytes
 ``` 
 
-If you run this twice, you should see a `MISS` on x-cache-status the first time you request a file, and a `HIT` on x-cache-status if you request the same file again. If you use a different user and different token to request the same file, you should see another `HIT` on the cache.
+If you run this twice, you should see a `MISS` on `x-cache-status` the first time you request a file, and a `HIT` on `x-cache-status` if you request the same file again. If you use a different user and different token to request the same file, you should see another `HIT` on the cache.
 
 You can use whatever user fields you like to make tokens, but there are some considerations:
 
