@@ -280,7 +280,29 @@ premium_token = PremiumSubscriberTokenGenerator()
 
 Most of this has been copied and pasted from the core Django `PasswordResetTokenGenerator` class, we're simply overriding two methods.  First, we need to override `_make_hash_value` to tell our custom generator to use different fields than the default Django generator, which uses the user's password and last login date/time.  We want to use the user id, the field which tells whether or not the user is a paid subscriber `(user.is_paysubscribed)`, a uuid field `(user.uuid)` that is never shown to the user, and the user's payment status from our Stripe payment library `(user.stripe_subscription.status)` which tells whether or not the subscription is active.
 
-As you can see here, the Django genereated tokens aren't stored in the database, rather they are generated for the user, and then generated again when Django checks. If any of the database fields have changed or if the time limit has expired the token will check `False`, otherwise `True` will be returned by the token check method. With this in mind you can use whatever fields you like here to make tokens, but there are some considerations:
+As you can see here, the Django genereated tokens aren't stored in the database, rather they are generated for the user, and then generated again when Django checks. If any of the database fields have changed or if the time limit has expired the token will check `False`, otherwise `True` will be returned by the token check method.
+
+With everything in place, [curl](https://curl.se/){:target="_blank" rel="noopener"} is a good tool to use to check and make sure all of this works.
+
+```bash
+$ curl -I https://www.mydomain.net/premium_media/YWRtaW5AYX.../1/ascau3-8f176710bf483694.../sample1.m4a
+
+HTTP/2 200 
+server: nginx
+date: Mon, 25 Oct 2021 23:45:33 GMT
+content-type: audio/x-m4a; charset=utf-8
+content-length: 2034429
+expires: Tue, 26 Oct 2021 00:45:33 GMT
+cache-control: max-age=3600
+last-modified: Tue, 17 Aug 2021 23:23:58 GMT
+etag: "c7cb4cfbf25ef6b3d3bd9b0d9ef77a7e"
+x-cache-status: HIT
+accept-ranges: bytes
+``` 
+
+If you run this twice, you should see a `MISS` on x-cache-status the first time you request a file, and a `HIT` on x-cache-status if you request the same file again. If you use a different user and different token to request the same file, you should see another `HIT` on the cache.
+
+You can use whatever user fields you like to make tokens, but there are some considerations:
 
 * There should be at least one field that the user cannot possibly see, otherwise a particularly clever user might be able to generate a token on their own whether or not they are actually a paid subscriber.  In my case user.id is the user's email, so that isn't very obscure, lots of users might know other users' email addresses. Their Stripe status isn't very obscure either, since a user familiar with Stripe might know that a valid subscription returns `active` as a status. What *is* obscure is the uuid. I generate uuids for users when they sign up and store that uuid in the database, but I don't use the uuid for anything except authentication token hashes so it's not feasible for a user to find out what their uuid is.
 
