@@ -293,8 +293,8 @@ Python 3.8.5 (v3.8.5:580fbb018f, Jul 20 2020, 12:11:27)
 [Clang 6.0 (clang-600.0.57)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
 (InteractiveConsole)
->>> from users.tokens import premium_token
->>> from users.models import CustomUser
+>>> from myapp.tokens import premium_token
+>>> from myapp.models import CustomUser # or wherever your usermodel is...
 >>> from django.utils.http import urlsafe_base64_encode
 >>> from django.utils.encoding import force_bytes
 >>> 
