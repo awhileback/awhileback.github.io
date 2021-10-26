@@ -284,8 +284,34 @@ As you can see here, the Django genereated tokens aren't stored in the database,
 
 With everything in place, [curl](https://curl.se/){:target="_blank" rel="noopener"} is a good tool to use to check and make sure all of this works.
 
+We can make a link in the Django shell:
+
+```python
+
+$ python manage.py shell
+Python 3.8.5 (v3.8.5:580fbb018f, Jul 20 2020, 12:11:27) 
+[Clang 6.0 (clang-600.0.57)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from users.tokens import premium_token
+>>> from users.models import CustomUser
+>>> from django.utils.http import urlsafe_base64_encode
+>>> from django.utils.encoding import force_bytes
+>>> 
+>>> user = CustomUser.objects.get(pk=1)
+>>> token = premium_token.make_token(user)
+>>> uidb64 = urlsafe_base64_encode(force_bytes(user.email))
+>>> token
+'av394n-8f17...'
+>>> uidb64
+'YWRtaW5AYXd...'
+>>>  
+```
+
+With which we can go on to curl with the generated base64 email and token...
+
 ```bash
-$ curl -I https://www.mydomain.net/premium_media/YWRtaW5AYX.../1/ascau3-8f176710bf483694.../sample1.m4a
+$ curl -I https://www.mydomain.net/premium_media/YWRtaW5AYXd.../1/av394n-8f17.../sample1.m4a
 
 HTTP/2 200 
 server: nginx
