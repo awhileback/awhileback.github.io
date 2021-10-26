@@ -100,7 +100,7 @@ server {
         use_temp_path=off;
         proxy_cache media-files;
         proxy_cache_key $scheme$proxy_host$download_path;
-        proxy_cache_valid 200 304 3600;
+        proxy_cache_valid 1440m;
         proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
         proxy_cache_revalidate on;
         proxy_ignore_headers Set-Cookie;
