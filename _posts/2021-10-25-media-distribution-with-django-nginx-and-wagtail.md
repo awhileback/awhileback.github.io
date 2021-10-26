@@ -308,7 +308,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>>  
 ```
 
-With which we can go on to curl with the generated base64 email and token...
+With which we can go on to curl with the generated base64 email and token, replace the interior `/1/` and the file name with a media file id and name that exist in your private media S3 bucket...
 
 ```bash
 $ curl -I https://www.mydomain.net/premium_media/YWRtaW5AYXd.../1/av394n-8f17.../sample1.m4a
