@@ -358,7 +358,7 @@ feed readers or podcast players to access your premium episodes.{% endblocktrans
 
 So for a user to have this section of the subscription profile page rendered to them, they have to be logged in, have a `stripe_subscription` and that subscription must have an `active` status.  Otherwise, the whole `Premium Content Links` section of the subscription profile page will not be rendered, and thus a user without a paid subscription can never get Django to show them a `premium_token` link.
 
-All that's left here, then, is how to make a token. That's easy. The same `PasswordResetTokenGenerator` class that checks tokens also makes tokens.
+All that's left here then, is how to make a token. That's easy. As you saw in the Django shell example above in which I manually created a base64 encoded email and a user token, the same `PasswordResetTokenGenerator` class that checks tokens also makes tokens.
 
 ```python
 myapp/views.py
