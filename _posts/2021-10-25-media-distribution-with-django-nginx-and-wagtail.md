@@ -284,7 +284,7 @@ As you can see here, the Django genereated tokens aren't stored in the database,
 
 With everything in place, [curl](https://curl.se/){:target="_blank" rel="noopener"} is a good tool to use to check and make sure all of this works.
 
-We can make a link in the Django shell:
+We can make user / token link args in the Django shell:
 
 ```python
 
