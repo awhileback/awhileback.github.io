@@ -10,7 +10,7 @@ categories: [media, patreon, wagtail, django]
 <br/>
 <hr>
 
-As I eluded to in a previous post, I have been writing an alternative for Patreon and its media distribution framework. This week it will be posted on Github and I've decided to make it truly free, open-source, no strings attached for content creators.
+As I alluded to in a previous post, I have been writing an alternative for Patreon and its media distribution framework. This week it will be posted on Github and I've decided to make it truly free, open-source, no strings attached for content creators.
 
 Here's why:
 
