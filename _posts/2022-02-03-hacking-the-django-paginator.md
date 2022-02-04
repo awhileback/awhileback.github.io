@@ -22,10 +22,6 @@ Herein lies the catch.  The only thing the Django paginator supports out of the 
 
 In my case, I need to split up an index of podcasts and / or video streams by season numbers (if the author chooses to publish by season rather than a linear list of episodes).  I could have an entire different Page class for series episodes I suppose, but that doesn't really look very high-effort to the end user if they have to have a whole different database table for a minor change in the content type.  For the purposes of media distribution as an audio podcast or a video podcast, the episodes are still sent over the wire via RSS feeds in date order, they are just given extra category tags in the XML that allows apps rendering the episodes to re-sort them by series number after the fact.
 
-In Django's case, you can't even give the paginator class a set of pages to paginate without passing a number to split them by, so it has no grasp of this concept of splitting by another data field at all.  
-
-But it is possible to do so, here's how:
-
 # Visualizing the data
 
 Here's what our data will look like:
