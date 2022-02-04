@@ -116,7 +116,7 @@ class MyPage(Page):
 
 Overriding `get_context` should be familiar to anyone who has worked with Django and / or Wagtail before, so that's where this will live.  There are some caveats with how we start:
 
-1. We can't work directly with an index (unless it's one of Django's fancy new (as of 3.x) "include" indexes that tack on extra data at the end? maybe?).  We need to use a queryset because we have to filter the results by season number and you can't filter indexes by data they don't have.
+1. We can't work directly with an index (unless it's one of Django's fancy new (as of 3.x) "include" indexes that tack on extra data at the end? maybe?).  We need to use a queryset because we have to filter the results by season number and you can't filter indexes by data they don't have. As such, it's a good idea to define an index on the season number field here, to help the database get its page ranges as efficiently as possible.
 
 2. In the interest of keeping complexity to a minimum we don't want to sort by anything but the data we're using in here.  If season numbers don't match the loop index numbers and url query parameter numbers, you will have a *lot* of extra complexity on your hands to make it all line up. So just do them in an order so that the numbers align.
 
