@@ -289,7 +289,7 @@ The resulting XML output looks good to me:
 </urlset>
 ```
 
-Now Google will leave your root `/episodes/` index alone and instead go to that page by the season numbers, as you would want.  If you have breadcrumbs in your templats or schema metadata you'll need similar logic in those to accomplish the same thing, of course.  
+Now Google will leave your root `/episodes/` index alone and instead go to that page by the season numbers, as you would want.  If you have breadcrumbs in your templates or schema metadata you'll need similar logic in those to accomplish the same thing, of course.  
 
 And there you have it!  Django's paginator is still rather simple and clunky, but if you can orchestrate a half dozen of them working in unison, you can accomplish a little more than one of those paginators can do out of the box.
 
