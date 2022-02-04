@@ -164,18 +164,19 @@ Then, create an empty dict.  A dictionary is a great data container for this pur
 
 If we're going to put every episode from a season onto its own page, then logically we will have a number of pages that matches the total number of seasons.  That can be deduced from the variables we've set before the loop here.  By taking the season number from the first episode in the index, and the season number from the last episode in the index, we will have an always up-to-date knowledge of how many seasons there are, and how they are numbered.
 
-To make everything line up as I mentioned above, we'll start with the `oldest_season` which should probably be 1, and loop until we reach the `loop_end` which will be the most recent season. The first season (1) should line up with the first page in the index listing (1) and that will also be the first paginator instance (1) of several that we are going to create.  If you want to change these, you are a lot braver than I am and will probably find yourself in a world of confusion and doubt.  Or you are a mathematical genius, but in either case I'm not.  The numbers lining up makes all of this relatively simple so keep them that way.
+To make everything line up as I mentioned above, we'll start with the `oldest_season` which should probably be 1, and loop until we reach the `loop_end` which will be the most recent season. The first season (1) should line up with the first page in the index listing (1) and that will also be the first paginator instance (1) of several that we are going to create.  If you want to change these, you are a lot braver than I am and will probably find yourself in a world of confusion and doubt.  Or you are a mathematical genius, but in either case I'm not.  The numbers lining up makes all of this relatively simple, so keep them that way.
 
 With each loop of the range, we are making a whole new paginator instance, with an upper limit of 200 episodes per page.  I don't know of any podcast or video cast that puts 200 episodes into a season, so that seems like a good arbitrary number to throw in, and you have to give the paginator a number because that's all it knows.  It will only include episodes that actually exist, so this could just as well be 500 or 1,000 if you insist, just to be sure.
 
-Because we want to work with greater-than or less-than logic, it makes sense to simply add 1 to the end of the last season for `loop_end` in the upper limit of the range loop as a place for the it to stop.  So if we have five seasons, we can say "less than six will surely capture all of the episodes."  For similar reasons the Django paginator pads the end of a set of paginated objects by adding one, so we can re-use that "last episode plus 1" as the total number of pages and not break anything in the paginator's default behavior.
+Because we want to work with greater-than or less-than logic, it makes sense to simply add 1 to the end of the last season for `loop_end` in the upper limit of the range loop as a place for the it to stop.  So if we have five seasons, we can say "less than six will surely capture all of the episodes."  For similar reasons the Django paginator pads the end of a set of paginated objects by adding one, so we can re-use that "last episode plus 1" as the total number of pages and not break anything in the paginator's default behavior, either.
 
 Once the loop is finished we'll have a dict that looks like this...
 
 ```shell
 (Pdb) season_qs
 
-{2: <website.utils.LocalPaginator object at 0x7fb060fa9f60>, 1: <website.utils.LocalPaginator object at 0x7fb060fd96d8>}
+{2: <website.utils.LocalPaginator object at 0x7fb060fa9f60>, 
+1: <website.utils.LocalPaginator object at 0x7fb060fd96d8>}
 ```
 
 ... which represents our two seasons of shows.  With all of our deleted properties and functions replaced with sensible variables taken from the loop, we have created paginator objects that can be templated just like a stock paginator object. Next, we need to move our logic to how the individual paginators are selected to render a page, since we have more than one of them rather than the single paginator object instance present in most configurations. 
@@ -202,9 +203,9 @@ Now we need to look for a request coming in that has a page number query paramen
             context['index_children'] = all_children
 ```
 
-... If there is a request with `?p=` as a query parameter, get its first value. Next, lets define a query word that will match a redirect defined elsewhere that always points to the latest episode's season number.  Presumably most people will want their most recent season prominently displayed at the front of the list, and as you noticed in the loop we started with season 1, not with the last season.
+... If there is a request with `?p=` as a query parameter, get its first value. Next, lets define a query word that will match a redirect defined elsewhere that always points to the `latest` episode's season number.  Presumably most people will want their most recent season prominently displayed at the front of the list, and as you noticed in the loop we started with season 1, not with the last season.
 
-If you're closely reading this you might think *"but why not just make the default URL for the episode index match the last season of the podcast instead of setting up a redirect URL?"* See point above about living in a world of regret, confusion, and doubt.  If you do this you will have made the first (1) instance of the podcast index into the last (2 for now, but ever-changing) instance of the podcast season index.  The numbers no longer match, and you have created a pagination scheme that will be infinitely more complex to keep straight in your head and your code. Numbers... pages... paginator objects... query parameters... make them match, trust me.
+If you're closely reading this you might think: *"but why not just make the default URL for the episode index match the last season of the podcast instead of setting up a redirect URL?"*  See point above about living in a world of regret, confusion, and doubt.  If you do this you will have made the first (1) instance of the podcast index into the last (2 for now, but ever-changing) instance of the podcast season index.  The numbers no longer match, and you have created a pagination scheme that will be infinitely more complex to keep straight in your head and your code. Numbers... pages... paginator objects... query parameters... make them match, trust me.
 
 Moving along, `else` if we land on a specific page number, we can grab the matching `season_qs` (paginator object) number that matches it, and since we are going to put all of a season's episodes on a single page, the `page` for the paginator to start with is always `(1)`. If someone asks for a page range out of bounds or some other error happens, we can put this all in `try` and `except` logic with a fallback to a page that we know exists and lands them where we want them to land by default.  A setting here of the `season_qs` paginator object associated with the *last* season (in other words, the length (`len`) of all paginator objects in the dict) will default any errors to dropping people off on the page for the most recent podcast season.
 
@@ -221,7 +222,7 @@ Lastly, it should be noted that all of this does not *complely* defeat the Djang
 {% endblock %}
 {% endraw %}```
 
-The above will conditionally use a "standard" pagination template if the `rss_itunes_type` field on the episode index we're working on is set to "episodic" rather than "serial".  If it matches and renders the `pagination_serial_podcast.html` template, you can put the slightly offset variable nesting variance in that template by itself.
+The above will conditionally use a "standard" pagination template if the `rss_itunes_type` custom field on the episode index we're working on is set to "episodic" rather than "serial".  If it matches and renders the `pagination_serial_podcast.html` template, you can put the slightly offset variable nesting variance in that template by itself.
 
 And there you have it!  Django's paginator is still rather simple and clunky, but if you can orchestrate a half dozen of them working in unison, you can accomplish a little more than one of those paginators can do out of the box.
 
@@ -231,4 +232,3 @@ Enjoy!
 </video>
 <br/>
 
-https://user-images.githubusercontent.com/84097090/152471733-47b080fb-9bfe-4af6-ae06-cb57c363a89e.mov
