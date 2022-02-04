@@ -48,7 +48,7 @@ While we don't want to break the golden rule of never looping a model to get dat
 
 Here's the secret sauce recipe:
 
-```
+```python
 class MyPage(Page):
 
 ...
@@ -134,7 +134,7 @@ So the solution is to make a new paginator class (and the Page class it depends 
 
 With the properties and functions that were blocking my path gone, lets step through what our loop is doing:
 
-```
+```python
     all_children = self.get_children().live().public().order_by('first_published_at')
 
         if all_children.first().season_number and self.rss_itunes_type == 'serial':
@@ -172,7 +172,7 @@ Because we want to work with greater-than or less-than logic, it makes sense to 
 
 Once the loop is finished we'll have a dict that looks like this...
 
-```
+```shell
 (Pdb) season_qs
 
 {2: <website.utils.LocalPaginator object at 0x7fb060fa9f60>, 1: <website.utils.LocalPaginator object at 0x7fb060fd96d8>}
@@ -184,7 +184,7 @@ Once the loop is finished we'll have a dict that looks like this...
 
 Now we need to look for a request coming in that has a page number query paramenter, like so...
 
-```
+```python
         pagenum = request.GET.get('p', 1)
 
             if pagenum == 'latest':
@@ -212,14 +212,14 @@ Then all you have to do is add the result to the context and send it along with 
 
 Lastly, it should be noted that all of this does not *complely* defeat the Django core paginator.  It's likely that you have shifted around some of the nesting of variables versus the default Django core paginator's output. For example what may have previously been `items.index_paginated.has_next` is now an extra layer removed, and you'll probably have to refer to it in the template as `items.index_paginated.paginator.has_next` to find out whether or not the current page has another season's episode listing page after it.  Remember that we put the data in a dict, so there's an extra layer of abstraction from the last variable in the chain that wasn't there before.  This is a simple thing to handle in the template, though...
 
-```
-templates/pages/content_index_page.html
+```python
+{% raw %}templates/pages/content_index_page.html
 
 {% if self.rss_itunes_type == 'serial' %}
 {% include "website/includes/pagination_serial_podcast.html" with items=index_paginated %}{% else %}
 {% include "website/includes/pagination_standard.html" with items=index_paginated %}{% endif %}
 {% endblock %}
-```
+{% endraw %}```
 
 The above will conditionally use a "standard" pagination template if the `rss_itunes_type` field on the episode index we're working on is set to "episodic" rather than "serial".  If it matches and renders the `pagination_serial_podcast.html` template, you can put the slightly offset variable nesting variance in that template by itself.
 
