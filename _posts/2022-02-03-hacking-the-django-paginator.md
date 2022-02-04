@@ -124,7 +124,7 @@ Overriding `get_context` should be familiar to anyone who has worked with Django
 
 As most good ideas do, this one suffers from a 'gotcha'.  You can't override a function return value or model field with a variable.  See how we are explicitly setting things like `has_previous` and `has_next` in our loop over the page ranges?  Yeah... you can't do that.  Those are properties in the Django core paginator class, and it's going to tell you exactly why you can't do that if you try to.
 
-So the solution is to make a new paginator class (and the Page class it depends on) with some of those extra screws and bolts from the factory left out.  All I've done here is copied the Paginator class from Django core over to my app's `utils.py` file, along with its associated Page class, and reproduced all of its required imports.  Then, I simply deleted all of the functions and properties that I need to override from the local app copy, and imported it as a different name instead of the core Django Page and Paginator classes.
+So the solution is to make a new paginator class (and the Page class it depends on) with some of those extra screws and bolts from the factory left out.  All I've done here is copied the Paginator class from Django core over to my app's `utils.py` file, along with its associated Page class, and reproduced all of its required imports.  Then, I simply deleted all of the functions and properties that I need to override from the local app copy, and imported it as a different name instead of the core Django Page and Paginator classes, taking care to rename "Page" references to "LocalPage" while doing so.
 
 # Step by step: the data and the loop
 
