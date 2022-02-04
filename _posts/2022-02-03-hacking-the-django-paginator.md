@@ -160,7 +160,7 @@ First we are defining our queryset that includes all pages beneath this index. N
 
 With those preliminary items done, we next import the local versions of the Django core Paginator and Page classes, without the properties and functions that we're going to override in our paginator instances.  
 
-Then, create an empty dict.  A dictionary is a wonderful data container for this purpose, in that it can have both arbitrary keys and arbitrary values that we can define programmatically.  We then need to do some simple math.
+Then, create an empty dict.  A dictionary is a great data container for this purpose, since it can have both arbitrary keys and arbitrary values that we can define programmatically.  We then need to do some simple math.
 
 If we're going to put every episode from a season onto its own page, then logically we will have a number of pages that matches the total number of seasons.  That can be deduced from the variables we've set before the loop here.  By taking the season number from the first episode in the index, and the season number from the last episode in the index, we will have an always up-to-date knowledge of how many seasons there are, and how they are numbered.
 
