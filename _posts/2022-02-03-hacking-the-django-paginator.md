@@ -297,7 +297,7 @@ And lastly, as mentioned a ways back up in this article you probably want to ove
 def serve(self, request, *args, **kwargs):
     request.is_preview = getattr(request, 'is_preview', False)
 
-    if not request.GET.get('p') and self.rss_itunes_type == 'serial':
+    if not request.GET and self.rss_itunes_type == 'serial':
         path = request.path_info.strip('/')
         slug = self.slug
         if path == slug:
@@ -308,7 +308,7 @@ def serve(self, request, *args, **kwargs):
     return super().serve(request, *args, **kwargs)
 ```
 
-... Stepping through this, "if there is not a ?p= parameter in the URL, and if the 'serial' flag is set on the index page, and if the path stripped of slashes equals the slug, return me to the latest season index page, otherwise use the old serve method via the superclass."  This logic may need to be custom tailored a bit to your specifications. The main point here is to bypass sub-paths of the main URL for the index page.  I am using some URLs underneath `/episodes/` for my RSS feeds so I can't match everything under the sun, I need to only match a URL that *ends with* `/episodes/` and leave my RSS links alone.  If all of these conditional checks pass you need to return the superclass of the serve method, so that all other modifications you've made in various other places to the Django / Wagtail serving mechanisms get executed as they would otherwise.
+... Stepping through this, "if there is not a parameter in the URL, and if the 'serial' flag is set on the index page, and if the path stripped of slashes equals the slug, return me to the latest season index page, otherwise use the old serve method via the superclass."  This logic may need to be custom tailored a bit to your specifications. The main point here is to bypass sub-paths of the main URL for the index page.  I am using some URLs underneath `/episodes/` for my RSS feeds so I can't match everything under the sun, I need to only match a URL that *ends with* `/episodes/` and leave my RSS links alone.  If all of these conditional checks pass you need to return the superclass of the serve method, so that all other modifications you've made in various other places to the Django / Wagtail serving mechanisms get executed as they would otherwise.
 
 And there you have it!  Django's paginator is still rather simple and clunky, but if you can orchestrate a half dozen of them working in unison, you can accomplish a little more than one of those paginators can do out of the box.
 
