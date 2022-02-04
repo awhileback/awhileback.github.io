@@ -259,9 +259,9 @@ def get_sitemap_urls(self, request=None):
         ]
 ```
 
-Firstly, conditionally get the same queryset we worked with for the paginator based on whether or not this index page is set for "serial" episodes.  If it isn't there's no reason to define an SQL query, we can skip to the `else` return statement at the bottom that doesn't need one.
+Firstly, conditionally get the same queryset we worked with for the paginator based on whether or not this index page is set for "serial" episodes.  If it isn't there's no reason to define an SQL query, we can skip to the `else` return statement at the bottom which doesn't need any SQL queries.
 
-Second, adapt the same paginator queryset from the main part of this article to make URLs and modifcation dates in a range loop instead of making paginators in a range loop.  The logic is exactly the same, we just need to specify different data in each pass of the loop.
+Second, adapt the same paginator queryset from the main part of this article to make URLs and modifcation dates in a range loop instead of making paginators in a range loop.  The logic is exactly the same, we just need to specify URLs and modification dates in each pass of the loop instead of pagination information.
 
 Lastly, append each pass of the loop to a list, as the Django sitemap generator wants a list of dicts for its input.  
 
@@ -289,7 +289,26 @@ The resulting XML output looks good to me:
 </urlset>
 ```
 
-Now Google will leave your root `/episodes/` index alone and instead go to that page by the season numbers, as you would want.  If you have breadcrumbs in your templates or schema metadata you'll need similar logic in those to accomplish the same thing, of course.  
+Now Google will leave your root `/episodes/` index alone and instead go to that page by the season numbers, as you would want.  If you have breadcrumbs in your templates or schema metadata you'll need similar logic in those to accomplish the same thing, of course.
+
+And lastly, as mentioned a ways back up in this article you probably want to override the base `/episodes/` URL to always return a particular season, we can do that by overriding the `serve` method on the (Wagtail, in this case) page...
+
+```python
+def serve(self, request, *args, **kwargs):
+    request.is_preview = getattr(request, 'is_preview', False)
+
+    if not request.GET.get('p') and (self.rss_itunes_type == 'serial'):
+        path = request.path_info.strip('/')
+        slug = self.slug
+        if path == slug:
+            latest_episode = self.get_index_children().first()
+            latest_season = str(latest_episode.season_number)
+            return redirect(str(request.get_raw_uri()) + '?p=' + latest_season, permanent=False)
+
+    return super().serve(request, *args, **kwargs)
+```
+
+... Stepping through this, "if there is not a ?p= parameter in the URL, and if the 'serial' flag is set on the index page, and if the path stripped of slashes equals the slug, return me to the latest season index page, otherwise use the old serve method via the superclass."  This logic may need to be custom tailored a bit to your specifications.  In my case I don't mess with default slugs, so a page named "episodes" will always have a slug of the same name, your case may be different.  I am using some URLs underneath `/episodes/` for my RSS feeds so I can't match everything, I need to only match a URL that *ends with* `/episodes/` and leave my RSS links alone.  If all of these conditional checks fail you need to return the superclass of the serve method, so that all other modifications you've made in various other places to the Django / Wagtail serving mechanisms get executed as they would otherwise.
 
 And there you have it!  Django's paginator is still rather simple and clunky, but if you can orchestrate a half dozen of them working in unison, you can accomplish a little more than one of those paginators can do out of the box.
 
