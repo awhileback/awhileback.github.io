@@ -228,7 +228,7 @@ And there you have it!  Django's paginator is still rather simple and clunky, bu
 
 Enjoy!
 
-<video src="https://user-images.githubusercontent.com/84097090/152471940-1922d6f6-f5af-4313-a62d-6ae9d506696b.mp4" controls="controls" style="max-width: 100% !important;height: auto !important">
+<video src="https://user-images.githubusercontent.com/84097090/152486712-1fd7be63-ceb4-400a-95ba-8bc60ad22712.mp4" controls="controls" style="max-width: 100% !important;height: auto !important">
 </video>
 <br/>
 
