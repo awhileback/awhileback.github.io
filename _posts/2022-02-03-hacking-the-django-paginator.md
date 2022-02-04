@@ -156,7 +156,7 @@ With the properties and functions that were blocking my path gone, lets step thr
                 season_qs[i].number = i
 ```
 
-First we are defining our queryset that includes all pages beneath this index. Next, a couple of conditionals to make sure that we are only doing this to someone who really, really, really wants their podcast or video cast to be sorted by seasons, so much so that they have properly set up both the index page model and the episode page model to do so.
+First we are defining our queryset that includes all pages beneath this index. Next, a couple of conditionals to make sure that we are only doing this to someone who really, really, really wants their podcast or video cast to be sorted by seasons, so much so that they have properly set up both the index page and the first episode page to do so.
 
 With those preliminary items done, we next import the local versions of the Django core Paginator and Page classes, without the properties and functions that we're going to override in our paginator instances.  
 
