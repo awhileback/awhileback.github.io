@@ -228,35 +228,35 @@ Last but not least, if we do this we should probably change the sitemap generato
 ```python
 
 def get_sitemap_urls(self, request=None):
-        if self.rss_itunes_type == 'serial':
-            all_children = self.get_index_children().live().public().order_by('first_published_at')
-        else:
-            pass
-        if all_children.first().season_number and self.rss_itunes_type == 'serial':
-            oldest_season = all_children.first().season_number
-            loop_end = all_children.last().season_number
-            season_qs = dict()
-            season_list = []
-            for i in range(oldest_season, loop_end + 1):
-                season_qs[i] = all_children.filter(season_number=i).order_by('-latest_revision_created_at').first()
-                season_qs[i].location = self.get_full_url(request) + '?p=' + str(season_qs[i].season_number)
-                season_qs[i].lastmod = season_qs[i].latest_revision_created_at
-                season_list.append({
-                    'location': season_qs[i].location,
-                    'lastmod': season_qs[i].lastmod,
-                })
+    if self.rss_itunes_type == 'serial':
+        all_children = self.get_index_children().live().public().order_by('first_published_at')
+    else:
+        pass
+    if all_children.first().season_number and self.rss_itunes_type == 'serial':
+        oldest_season = all_children.first().season_number
+        loop_end = all_children.last().season_number
+        season_qs = dict()
+        season_list = []
+        for i in range(oldest_season, loop_end + 1):
+            season_qs[i] = all_children.filter(season_number=i).order_by('-latest_revision_created_at').first()
+            season_qs[i].location = self.get_full_url(request) + '?p=' + str(season_qs[i].season_number)
+            season_qs[i].lastmod = season_qs[i].latest_revision_created_at
+            season_list.append({
+                'location': season_qs[i].location,
+                'lastmod': season_qs[i].lastmod,
+            })
 
-            return season_list
-        else:
-            # this is the stock sitemap return for episode-type indexes
-            return [
-                {
-                    'location': self.get_full_url(request),
-                    # fall back on latest_revision_created_at if last_published_at is null
-                    # (for backwards compatibility from before last_published_at was added)
-                    'lastmod': (self.last_published_at or self.latest_revision_created_at),
-                }
-            ]
+        return season_list
+    else:
+        # this is the stock sitemap return for episode-type indexes
+        return [
+            {
+                'location': self.get_full_url(request),
+                # fall back on latest_revision_created_at if last_published_at is null
+                # (for backwards compatibility from before last_published_at was added)
+                'lastmod': (self.last_published_at or self.latest_revision_created_at),
+            }
+        ]
 ```
 
 Firstly, conditionally get the same queryset we worked with for the paginator based on whether or not this index page is set for "serial" episodes.  If it isn't there's no reason to define an SQL query, we can skip to the `else` return statement at the bottom that doesn't need one.
