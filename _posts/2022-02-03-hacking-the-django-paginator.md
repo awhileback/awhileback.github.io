@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Hacking the Django Paginator, Custom and Complex Page-Splitting
+title: Complex Custom Field Pagination in Django
 categories: [wagtail, pagination, django]
 ---
 
