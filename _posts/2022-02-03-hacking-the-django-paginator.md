@@ -216,9 +216,80 @@ Lastly, it should be noted that all of this does not *complely* defeat the Djang
 {% include "website/includes/pagination_serial_podcast.html" with items=index_paginated %}{% else %}
 {% include "website/includes/pagination_standard.html" with items=index_paginated %}{% endif %}
 {% endblock %}
-{% endraw %}```
+{% endraw %}
+```
 
 The above will conditionally use a "standard" pagination template if the `rss_itunes_type` custom field on the episode index we're working on is set to "episodic" rather than "serial".  If it matches and renders the `pagination_serial_podcast.html` template, you can put the slightly offset variable nesting variance in that template by itself.
+
+# What else am I forgetting?
+
+Last but not least, if we do this we should probably change the sitemap generator to return the season numbered links to the episode page so that Google knows about all of this.  Thankfully if you're using Wagtail this is pretty easy, as your page classes have a `get_sitemap_urls` function that you can simply override like so:
+
+```python
+
+def get_sitemap_urls(self, request=None):
+        if self.rss_itunes_type == 'serial':
+            all_children = self.get_index_children().live().public().order_by('first_published_at')
+        else:
+            pass
+        if all_children.first().season_number and self.rss_itunes_type == 'serial':
+            oldest_season = all_children.first().season_number
+            loop_end = all_children.last().season_number
+            season_qs = dict()
+            season_list = []
+            for i in range(oldest_season, loop_end + 1):
+                season_qs[i] = all_children.filter(season_number=i).order_by('-latest_revision_created_at').first()
+                season_qs[i].location = self.get_full_url(request) + '?p=' + str(season_qs[i].season_number)
+                season_qs[i].lastmod = season_qs[i].latest_revision_created_at
+                season_list.append({
+                    'location': season_qs[i].location,
+                    'lastmod': season_qs[i].lastmod,
+                })
+
+            return season_list
+        else:
+            # this is the stock sitemap return for episode-type indexes
+            return [
+                {
+                    'location': self.get_full_url(request),
+                    # fall back on latest_revision_created_at if last_published_at is null
+                    # (for backwards compatibility from before last_published_at was added)
+                    'lastmod': (self.last_published_at or self.latest_revision_created_at),
+                }
+            ]
+```
+
+Firstly, conditionally get the same queryset we worked with for the paginator based on whether or not this index page is set for "serial" episodes.  If it isn't there's no reason to define an SQL query, we can skip to the `else` return statement at the bottom that doesn't need one.
+
+Second, adapt the same paginator queryset from the main part of this article to make URLs and modifcation dates in a range loop instead of making paginators in a range loop.  The logic is exactly the same, we just need to specify different data in each pass of the loop.
+
+Lastly, append each pass of the loop to a list, as the Django sitemap generator wants a list of dicts for its input.  
+
+The resulting XML output looks good to me:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<url>
+    <loc>http://127.0.0.1:8000/</loc>
+    <lastmod>2022-01-31</lastmod>
+</url>
+<url>
+    <loc>http://127.0.0.1:8000/episodes/?p=1</loc>
+    <lastmod>2022-02-04</lastmod>
+</url>
+<url>
+    <loc>http://127.0.0.1:8000/episodes/?p=2</loc>
+    <lastmod>2022-02-04</lastmod>
+</url>
+<url>
+    <loc>http://127.0.0.1:8000/episodes/test-episode-1/</loc>
+    <lastmod>2022-02-02</lastmod></url>
+...
+</urlset>
+```
+
+Now Google will leave your root `/episodes/` index alone and instead go to that page by the season numbers, as you would want.  If you have breadcrumbs in your templats or schema metadata you'll need similar logic in those to accomplish the same thing, of course.  
 
 And there you have it!  Django's paginator is still rather simple and clunky, but if you can orchestrate a half dozen of them working in unison, you can accomplish a little more than one of those paginators can do out of the box.
 
