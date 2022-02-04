@@ -77,12 +77,12 @@ class MyPage(Page):
             if pagenum == 'latest':
                 try:
                     paged_series_children = season_qs.get(loop_end).page(1)
-                except (PageNotAnInteger, EmptyPage, InvalidPage) as e:
+                except:
                     paged_series_children = season_qs[len(season_qs)].page(1)
             else:
                 try:
                     paged_series_children = season_qs.get(int(pagenum)).page(1)
-                except (PageNotAnInteger, EmptyPage, InvalidPage) as e:
+                except:
                     paged_series_children = season_qs[len(season_qs)].page(1)
 
             context['index_paginated'] = paged_series_children
