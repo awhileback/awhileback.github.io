@@ -297,7 +297,7 @@ And lastly, as mentioned a ways back up in this article you probably want to ove
 def serve(self, request, *args, **kwargs):
     request.is_preview = getattr(request, 'is_preview', False)
 
-    if not request.GET.get('p') and (self.rss_itunes_type == 'serial'):
+    if not request.GET.get('p') and self.rss_itunes_type == 'serial':
         path = request.path_info.strip('/')
         slug = self.slug
         if path == slug:
