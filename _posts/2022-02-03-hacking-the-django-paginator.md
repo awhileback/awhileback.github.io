@@ -27,12 +27,12 @@ In my case, I need to split up an index of podcasts and / or video streams by se
 Here's what our data will look like:
 
 
-|  episode number |    title       | etc  | etc  | season number  |
-| --------------- | -------------- | ---- | ---- | -------------- |
-|         1       |  first episode | blah | blah |      1         |
-|         2       | second episode | blah | blah |      1         |
-|         1       |  third episode | blah | blah |      2         |
-|         2       | fourth episode | blah | blah |      2         |
+| episode id |  episode number |    title       | etc  | etc  | season number  |
+| ---------- | --------------- | -------------- | ---- | ---- | -------------- |
+|      1     |         1       |  first episode | blah | blah |      1         |
+|      2     |         2       | second episode | blah | blah |      1         |
+|      3     |         1       |  third episode | blah | blah |      2         |
+|      4     |         2       | fourth episode | blah | blah |      2         |
 
 There are no page splits in the RSS, this is only a concern on the website that will host the show.  Predictably, we can't put hundreds of episodes on a single page, nor can we split them by some arbitrary number, because seasons may have different numbers of episodes and any offset mismatch could break the whole thing into a mess.
 
