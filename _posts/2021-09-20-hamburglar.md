@@ -447,7 +447,7 @@ Then, if you add a simple **HtmlBlock** to the StreamField body for your page, a
 Hit the page preview, and you should be greeted with your "test" divs laid out in the grid that you drew in the gui, with nice pink dotted lines around them showing their placement on the page.  If you go back and repeat the process but create a "grid row" instead of a "grid layout" you will have a responsive grid row that line breaks as the screen size shrinks, at the points you specified in the form.
 <br/>
 
-<video src="https://user-images.githubusercontent.com/84097090/134270516-c2057f56-8b8a-4d77-be3e-7d40a8ebc457.mp4" controls="controls" style="max-width: 100% !important;height: auto !important">
+<video src="https://user-images.githubusercontent.com/84097090/134270516-c2057f56-8b8a-4d77-be3e-7d40a8ebc457.mp4" controls="controls" style="max-width: 100% !important;height: auto !important;">
 </video>
 <br/>
 
